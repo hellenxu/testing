@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.google.common.collect.Lists;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -18,6 +18,7 @@ import ca.six.unittestapp.todo.data.source.TasksRepository;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @copyright six.ca
@@ -25,20 +26,21 @@ import static org.mockito.Mockito.verify;
  */
 
 public class TasksPresenterTest {
-    private static TasksRepository mMockTasksRepository;
-    private static TasksContract.View mMockTasksView;
-    private static TasksPresenter mTasksPresenter;
-    private static Task mTestTask;
-    private static final List<Task> TASKS
+    private TasksRepository mMockTasksRepository;
+    private TasksContract.View mMockTasksView;
+    private TasksPresenter mTasksPresenter;
+    private Task mTestTask;
+    private final List<Task> TASKS
             = Lists.newArrayList(new Task("Title1", "Description1"),
             new Task("Title2", "Description2", true), new Task("Title3", "Description3", true));
 
-    @BeforeClass
-    public static void setUp(){
+    @Before
+    public void setUp(){
         mMockTasksRepository = mock(TasksRepository.class);
         mMockTasksView = mock(TasksContract.View.class);
         mTasksPresenter = new TasksPresenter(mMockTasksRepository, mMockTasksView);
         mTestTask = new Task("test", "test for sure");
+        when(mMockTasksView.isActive()).thenReturn(true);
     }
 
     @Test
@@ -77,14 +79,12 @@ public class TasksPresenterTest {
         mTasksPresenter.setFiltering(TasksFilterType.ALL_TASKS);
         mTasksPresenter.loadTasks(true);
 
-//        verify(mMockTasksRepository).refreshTasks();
-
         verify(mMockTasksView).setLoadingIndicator(true);
+        verify(mMockTasksRepository).refreshTasks();
         verify(mMockTasksRepository).getTasks(loadCaptor.capture());
         loadCaptor.getValue().onTasksLoaded(TASKS);
 
         verify(mMockTasksView).setLoadingIndicator(false);
-
         verify(mMockTasksView).showTasks(taskListCaptor.capture());
         Assert.assertTrue(TASKS.size() == taskListCaptor.getValue().size());
     }

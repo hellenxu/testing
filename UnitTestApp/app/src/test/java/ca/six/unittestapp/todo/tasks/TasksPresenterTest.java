@@ -30,6 +30,11 @@ public class TasksPresenterTest {
     private TasksContract.View mMockTasksView;
     private TasksPresenter mTasksPresenter;
     private Task mTestTask;
+    private ArgumentCaptor<TasksDataSource.LoadTasksCallback> mLoadTaskCallbackCaptor
+            = ArgumentCaptor.forClass(TasksDataSource.LoadTasksCallback.class);
+    private ArgumentCaptor<List> mTaskListCaptor = ArgumentCaptor.forClass(List.class);
+
+    // include one uncompleted task and two completed tasks
     private final List<Task> TASKS
             = Lists.newArrayList(new Task("Title1", "Description1"),
             new Task("Title2", "Description2", true), new Task("Title3", "Description3", true));
@@ -72,21 +77,45 @@ public class TasksPresenterTest {
 
     @Test
     public void loadAllTasksTest(){
-        ArgumentCaptor<TasksDataSource.LoadTasksCallback> loadCaptor
-                = ArgumentCaptor.forClass(TasksDataSource.LoadTasksCallback.class);
-        ArgumentCaptor<List> taskListCaptor = ArgumentCaptor.forClass(List.class);
-
         mTasksPresenter.setFiltering(TasksFilterType.ALL_TASKS);
         mTasksPresenter.loadTasks(true);
 
         verify(mMockTasksView).setLoadingIndicator(true);
         verify(mMockTasksRepository).refreshTasks();
-        verify(mMockTasksRepository).getTasks(loadCaptor.capture());
-        loadCaptor.getValue().onTasksLoaded(TASKS);
+        verify(mMockTasksRepository).getTasks(mLoadTaskCallbackCaptor.capture());
+        mLoadTaskCallbackCaptor.getValue().onTasksLoaded(TASKS);
 
         verify(mMockTasksView).setLoadingIndicator(false);
-        verify(mMockTasksView).showTasks(taskListCaptor.capture());
-        Assert.assertTrue(TASKS.size() == taskListCaptor.getValue().size());
+        verify(mMockTasksView).showTasks(mTaskListCaptor.capture());
+        Assert.assertTrue(TASKS.size() == mTaskListCaptor.getValue().size());
+    }
+
+    @Test
+    public void loadActiveTasksTest(){
+        mTasksPresenter.setFiltering(TasksFilterType.ACTIVE_TASKS);
+        mTasksPresenter.loadTasks(false);
+
+        verify(mMockTasksView).setLoadingIndicator(true);
+        verify(mMockTasksRepository).getTasks(mLoadTaskCallbackCaptor.capture());
+        mLoadTaskCallbackCaptor.getValue().onTasksLoaded(TASKS);
+
+        verify(mMockTasksView).setLoadingIndicator(false);
+        verify(mMockTasksView).showTasks(mTaskListCaptor.capture());
+        Assert.assertTrue(mTaskListCaptor.getValue().size() == 1);
+    }
+
+    @Test
+    public void loadCompletedTasksTest(){
+        mTasksPresenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
+        mTasksPresenter.loadTasks(false);
+
+        verify(mMockTasksView).setLoadingIndicator(true);
+        verify(mMockTasksRepository).getTasks(mLoadTaskCallbackCaptor.capture());
+        mLoadTaskCallbackCaptor.getValue().onTasksLoaded(TASKS);
+
+        verify(mMockTasksView).setLoadingIndicator(false);
+        verify(mMockTasksView).showTasks(mTaskListCaptor.capture());
+        Assert.assertTrue(mTaskListCaptor.getValue().size() == 2);
     }
 
     @Test

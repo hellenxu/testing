@@ -21,7 +21,7 @@ import ca.six.unittestapp.R;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class AddEditTaskScreenTest {
+public class AddEditTaskUnitTest {
     private AddEditTaskActivity activity;
     private EditText etTaskTitle, etTaskDescription;
 

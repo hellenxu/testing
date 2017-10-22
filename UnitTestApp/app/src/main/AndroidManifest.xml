@@ -19,6 +19,7 @@
         <activity android:name=".todo.addedittask.AddEditTaskActivity" />
         <activity android:name=".todo.statistics.StatisticsActivity" />
         <activity android:name=".idlingres.MainActivity"/>
+        <activity android:name=".contrib.ItemListActivity"/>
     </application>
 
 </manifest>

@@ -58,5 +58,6 @@
     <string name="username">UserName:</string>
     <string name="password">Password:</string>
     <string name="login">Login</string>
+    <string name="item">Item: </string>
 
 </resources>

@@ -60,5 +60,6 @@
     <string name="login">Login</string>
     <string name="item">Item: </string>
     <string name="to_other_proc">Jump to Other Process</string>
+    <string name="label_send_data">SendData</string>
 
 </resources>

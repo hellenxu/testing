@@ -22,6 +22,8 @@
         <activity android:name=".contrib.ItemListActivity"/>
         <activity android:name=".multiprocesses.PrimaryActivity"/>
         <activity android:name=".multiprocesses.SecondActivity" android:process=":second"/>
+        <activity android:name=".intents.DefaultActivity"/>
+        <activity android:name=".intents.DataHandleActivity"/>
     </application>
 
 </manifest>

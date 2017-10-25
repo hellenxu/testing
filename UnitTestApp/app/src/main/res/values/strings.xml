@@ -59,5 +59,6 @@
     <string name="password">Password:</string>
     <string name="login">Login</string>
     <string name="item">Item: </string>
+    <string name="to_other_proc">Jump to Other Process</string>
 
 </resources>

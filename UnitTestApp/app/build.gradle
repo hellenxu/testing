@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "ca.six.unittestapp"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -55,6 +54,7 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    buildToolsVersion '27.0.3'
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -93,5 +93,9 @@ dependencies {
 
     //Robolectric
     testCompile "org.robolectric:robolectric:3.4.2"
+
+    //dagger2
+    compile 'com.google.dagger:dagger:2.10'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 }
 

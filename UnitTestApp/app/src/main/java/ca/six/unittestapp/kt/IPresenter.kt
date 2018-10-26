@@ -2,6 +2,7 @@ package ca.six.unittestapp.kt
 
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,15 +21,15 @@ interface IModel {
 
 data class OneItem(val id: Int, val brand: String)
 
-class OnePresenter(val model: OneModel, val view: OneView): IPresenter {
+class OnePresenter(val model: OneModel, val view: OneView, private val processScheduler: Scheduler, private val androidScheduler: Scheduler): IPresenter {
     override fun loadItems() {
-         model.fetch()
-                 .subscribeOn(Schedulers.newThread())
-                 .observeOn(AndroidSchedulers.mainThread())
-                 .subscribe {
+        model.fetch()
+                .subscribeOn(processScheduler)
+                .observeOn(androidScheduler)
+                .subscribe {
                     view.updateView(it)
-                 }
-                 .disposedBy(manager = CompositeDisposable())
+                }
+                .disposedBy(manager = CompositeDisposable())
     }
 
 }
@@ -36,7 +37,7 @@ class OnePresenter(val model: OneModel, val view: OneView): IPresenter {
 open class OneView: IView {
     init {
         val model = OneModel()
-        val presenter = OnePresenter(model, this)
+        val presenter = OnePresenter(model, this, Schedulers.newThread(), AndroidSchedulers.mainThread())
         presenter.loadItems()
     }
 

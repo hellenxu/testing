@@ -44,4 +44,15 @@ class OnePresenterTest {
                 .test()
                 .assertResult(1, 2, 3)
     }
+
+    @Test
+    fun requestMore() {
+        Flowable.range(5, 10)
+                .test(0)
+                .assertNoValues()
+                .requestMore(1)
+                .assertValue(5)
+                .requestMore(2)
+                .assertValues(5, 6, 7)
+    }
 }

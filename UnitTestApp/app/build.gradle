@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 //apply from: 'jacoco.gradle'
 
 android {
@@ -30,49 +31,49 @@ android {
         }
     }
 
-    // If you need to add more flavors, consider using flavor dimensions.
-    productFlavors {
-        mock {
-            applicationIdSuffix = ".mock"
-        }
-        prod {
-
-        }
-    }
-
-    // Remove mockRelease as it's not needed.
-    android.variantFilter { variant ->
-        if (variant.buildType.name.equals('release')
-                && variant.getFlavors().get(0).name.equals('mock')) {
-            variant.setIgnore(true);
-        }
-    }
-
-    // Always show the result of every unit test, even if it passes.
-    testOptions.unitTests.all {
-        testLogging {
-            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-        }
-    }
+//    // If you need to add more flavors, consider using flavor dimensions.
+//    productFlavors {
+//        mock {
+//            applicationIdSuffix = ".mock"
+//        }
+//        prod {
+//
+//        }
+//    }
+//
+//    // Remove mockRelease as it's not needed.
+//    android.variantFilter { variant ->
+//        if (variant.buildType.name.equals('release')
+//                && variant.getFlavors().get(0).name.equals('mock')) {
+//            variant.setIgnore(true);
+//        }
+//    }
+//
+//    // Always show the result of every unit test, even if it passes.
+//    testOptions.unitTests.all {
+//        testLogging {
+//            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+//        }
+//    }
     buildToolsVersion '27.0.3'
 }
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // App's dependencies, including test
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
-    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    compile "com.google.guava:guava:$rootProject.guavaVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
     // Dependencies for local unit tests
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
-    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    testImplementation "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     // Android Testing Support Library's runner and rules
-    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
-    androidTestCompile "com.android.support.test:rules:$rootProject.ext.runnerVersion"
+    androidTestImplementation "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    androidTestImplementation "com.android.support.test:rules:$rootProject.ext.runnerVersion"
     // Dependencies for Android unit tests
 
     //    androidTestCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
@@ -82,20 +83,24 @@ dependencies {
     //    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 
     // Espresso UI Testing
-    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
     // Resolve conflicts between main and test APK:
-    androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
-    androidTestCompile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    androidTestCompile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    androidTestImplementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    androidTestImplementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    androidTestImplementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
     //Robolectric
-    testCompile "org.robolectric:robolectric:3.4.2"
+    testImplementation "org.robolectric:robolectric:3.4.2"
 
     //dagger2
-    compile 'com.google.dagger:dagger:2.10'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
+    implementation 'com.google.dagger:dagger:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
 

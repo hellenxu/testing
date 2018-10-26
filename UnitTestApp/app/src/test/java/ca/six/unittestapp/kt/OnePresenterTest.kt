@@ -1,6 +1,8 @@
 package ca.six.unittestapp.kt
 
 import io.reactivex.Flowable
+import io.reactivex.exceptions.MissingBackpressureException
+import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
 import org.junit.Test
@@ -54,5 +56,16 @@ class OnePresenterTest {
                 .assertValue(5)
                 .requestMore(2)
                 .assertValues(5, 6, 7)
+    }
+
+    @Test
+    fun assertException() {
+        val publishProcessor = PublishProcessor.create<Int>()
+        val testSubscriber = publishProcessor.test(0)
+        testSubscriber.request(1)
+        publishProcessor.onNext(1)
+        publishProcessor.onNext(2)
+
+        testSubscriber.assertFailure(MissingBackpressureException::class.java, 1)
     }
 }

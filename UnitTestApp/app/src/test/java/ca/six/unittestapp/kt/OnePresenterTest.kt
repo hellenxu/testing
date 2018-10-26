@@ -3,10 +3,12 @@ package ca.six.unittestapp.kt
 import io.reactivex.Flowable
 import io.reactivex.exceptions.MissingBackpressureException
 import io.reactivex.processors.PublishProcessor
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
+import java.util.concurrent.TimeUnit
 
 /**
  * @CopyRight six.ca
@@ -40,6 +42,7 @@ class OnePresenterTest {
         Mockito.verify(view).updateView(items)
     }
 
+    //rx2.0 what's new in testing
     @Test
     fun newFeatures() {
         Flowable.range(1, 3)
@@ -67,5 +70,14 @@ class OnePresenterTest {
         publishProcessor.onNext(2)
 
         testSubscriber.assertFailure(MissingBackpressureException::class.java, 1)
+    }
+
+    @Test
+    fun asynchronousSource() {
+        Flowable.just(1)
+                .subscribeOn(Schedulers.single())
+                .test()
+                .awaitDone(5, TimeUnit.SECONDS)
+                .assertResult(1)
     }
 }

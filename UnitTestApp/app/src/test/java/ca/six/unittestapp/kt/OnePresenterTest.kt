@@ -37,4 +37,11 @@ class OnePresenterTest {
         Mockito.verify(model).fetch()
         Mockito.verify(view).updateView(items)
     }
+
+    @Test
+    fun newFeatures() {
+        Flowable.range(1, 3)
+                .test()
+                .assertResult(1, 2, 3)
+    }
 }

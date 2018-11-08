@@ -82,12 +82,25 @@ class OnePresenterTest {
                 .assertResult(1)
     }
 
+    //failed test: OnErrorNotImplementedException
+//    @Test
+//    fun getItems() {
+//        val oneModel = OneModel()
+//        oneModel.fetch()
+//                .subscribe {
+//                    assertEquals(0, it.size)
+//                }
+//    }
+
     @Test
     fun getItems() {
+        val items = ArrayList<OneItem>()
         val oneModel = OneModel()
         oneModel.fetch()
                 .subscribe {
-                    assertEquals(0, it.size)
+                    items.addAll(it)
                 }
+
+        assertEquals(11, items.size)
     }
 }

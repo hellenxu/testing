@@ -5,6 +5,7 @@ import io.reactivex.exceptions.MissingBackpressureException
 import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -79,5 +80,14 @@ class OnePresenterTest {
                 .test()
                 .awaitDone(5, TimeUnit.SECONDS)
                 .assertResult(1)
+    }
+
+    @Test
+    fun getItems() {
+        val oneModel = OneModel()
+        oneModel.fetch()
+                .subscribe {
+                    assertEquals(0, it.size)
+                }
     }
 }

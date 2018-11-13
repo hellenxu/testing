@@ -1,5 +1,6 @@
 package ca.six.unittestapp.kt
 
+import ca.six.unittestapp.rules.CustomSchedulersRule
 import io.reactivex.Flowable
 import io.reactivex.exceptions.MissingBackpressureException
 import io.reactivex.observers.TestObserver
@@ -10,6 +11,7 @@ import io.reactivex.subscribers.TestSubscriber
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import java.util.concurrent.TimeUnit
@@ -145,6 +147,20 @@ class OnePresenterTest {
         assertTrue(testSubscriber.hasSubscription())
         testSubscriber.assertValueCount(2)
         testSubscriber.assertValues(arrayListOf("1", "3"), arrayListOf("5", "7"))
+        testSubscriber.assertTerminated()
+    }
+
+    @Rule
+    @JvmField val rule = CustomSchedulersRule()
+
+    @Test
+    fun interval() {
+        val testSubscriber = TestSubscriber.create<Long>()
+        Flowable.interval(1, TimeUnit.SECONDS)
+                .take(10)
+                .subscribe(testSubscriber)
+
+        testSubscriber.assertValueCount(10)
         testSubscriber.assertTerminated()
     }
 }

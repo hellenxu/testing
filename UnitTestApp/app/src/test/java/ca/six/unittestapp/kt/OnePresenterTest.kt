@@ -6,7 +6,9 @@ import io.reactivex.observers.TestObserver
 import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -118,5 +120,31 @@ class OnePresenterTest {
         testObserver.onComplete()
         testObserver.assertComplete()
 
+    }
+
+    @Test
+    fun testSubscriber() {
+        val testSubscriber = TestSubscriber.create<String>()
+        Flowable.just("!", "432", "erw", "wrou", " mm")
+                .subscribe(testSubscriber)
+
+        assertTrue(testSubscriber.hasSubscription())
+        testSubscriber.assertValueCount(5)
+        testSubscriber.assertNever("test")
+        testSubscriber.assertValues("!", "432", "erw", "wrou", " mm")
+        testSubscriber.assertComplete()
+    }
+
+    @Test
+    fun testBuffer() {
+        val testSubscriber = TestSubscriber.create<List<String>>()
+        Flowable.just("1", "3", "5", "7")
+                .buffer(2)
+                .subscribe(testSubscriber)
+
+        assertTrue(testSubscriber.hasSubscription())
+        testSubscriber.assertValueCount(2)
+        testSubscriber.assertValues(arrayListOf("1", "3"), arrayListOf("5", "7"))
+        testSubscriber.assertTerminated()
     }
 }

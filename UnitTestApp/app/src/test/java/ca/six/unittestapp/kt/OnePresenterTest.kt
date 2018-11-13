@@ -163,4 +163,24 @@ class OnePresenterTest {
         testSubscriber.assertValueCount(10)
         testSubscriber.assertTerminated()
     }
+
+    @Test
+    fun intervalWithScheduler() {
+        val testSubscriber = TestSubscriber.create<Long>()
+        val testScheduler = TestScheduler()
+
+        Flowable.interval(1, TimeUnit.SECONDS, testScheduler)
+                .take(10)
+                .subscribe(testSubscriber)
+
+        testScheduler.advanceTimeBy(3, TimeUnit.SECONDS)
+        testSubscriber.assertValueCount(3)
+        testSubscriber.assertValues(0, 1, 2)
+        testSubscriber.assertNotTerminated()
+
+        testScheduler.advanceTimeBy(5, TimeUnit.SECONDS)
+        testSubscriber.assertValueCount(8)
+        testSubscriber.assertValues(0, 1, 2, 3, 4, 5, 6, 7)
+        testSubscriber.assertNotTerminated()
+    }
 }

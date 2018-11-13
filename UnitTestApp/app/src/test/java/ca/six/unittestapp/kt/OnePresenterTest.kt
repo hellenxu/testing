@@ -2,6 +2,7 @@ package ca.six.unittestapp.kt
 
 import io.reactivex.Flowable
 import io.reactivex.exceptions.MissingBackpressureException
+import io.reactivex.observers.TestObserver
 import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
@@ -102,5 +103,20 @@ class OnePresenterTest {
                 }
 
         assertEquals(11, items.size)
+    }
+
+    @Test
+    fun observerTest() {
+        val testObserver = TestObserver.create<Int>()
+        testObserver.onNext(1)
+        testObserver.onNext(3)
+        testObserver.onNext(7)
+
+        testObserver.assertValues(1, 3, 7)
+        testObserver.assertNotComplete()
+
+        testObserver.onComplete()
+        testObserver.assertComplete()
+
     }
 }
